@@ -5,7 +5,8 @@
 	<%= form_for :session, url: session_path do |form| %>
 	    <input type=text placeholder="Email" name="user[email]"><br>
 	    <input type=password placeholder="Password" name="user[password]"></br>
-	    <%= form.submit "Sign in" %>
+	    <%= form.submit "Sign in" %> 
+	    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
 	<% end %>
 <span><%= link_to signup_url do %>Sign Up<% end %></span>
 <% end %>

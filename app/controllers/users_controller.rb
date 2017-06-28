@@ -18,7 +18,14 @@ class UsersController < ApplicationController
 	end
 
 	def home
-		
 	end
+
+	def edit
+	    if current_user == User.find(params[:id])
+	  	   @user = current_user
+	    else
+	      redirect_to root_path
+	    end
+  	end
 
 end
