@@ -1,0 +1,29 @@
+<% if current_user == User.find(params[:id]) %>
+
+<h1 style="padding-top: 120px"> Additional Information </h1>
+
+
+<%= form_for @user do |form| %>
+    <div class="text-field">
+  <%= form.label :first_name %>
+  <%= form.text_field :first_name, type: 'First Name' %>
+</div>
+
+<div class="text-field">
+  <%= form.label :last_name %>
+  <%= form.text_field :last_name, type: 'Last Name' %>
+</div>
+
+<div class="text-field">
+  <%= form.label :email %>
+  <%= form.text_field :email, type: 'email' %>
+</div>
+
+    <div class="submit-field">
+      <%= form.submit %>
+    </div>
+<% end %>
+
+<% else %>
+	redirect_to root_path
+<% end %>

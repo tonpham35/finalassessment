@@ -25,19 +25,31 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+gem 'jquery-rails' #rails version 5.1.1 does not come with jquery libray
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.7'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+
+gem 'bootstrap-sass', '~> 3.3.6' #bootstrap html/css framework
+gem 'figaro'  #gitignore
+gem 'omniauth' #tokenaccess api
+gem 'omniauth-facebook' #facebook tokenaccess api
+gem 'faker' #seeding data
+gem 'momentjs-rails' #a lightweight javascript date library for parsing, manipulating, and formatting dates.
+gem 'rails_12factor', group: :production #assist in rails app in production
+gem 'foreman' #Manage Procfile-based applications
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '~> 2.13'
+  gem 'capybara', '~> 2.13' #integration test
+  gem 'rspec-rails' #feature testing
   gem 'selenium-webdriver'
 end
 
