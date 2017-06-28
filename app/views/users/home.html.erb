@@ -1,0 +1,11 @@
+<% if signed_in? %>
+	<%= link_to session_path(current_user.id), method: :delete do %>Logout<% end %></span>
+<% else %>
+	<h2>Login</h2>
+	<%= form_for :session, url: session_path do |form| %>
+	    <input type=text placeholder="Email" name="user[email]"><br>
+	    <input type=password placeholder="Password" name="user[password]"></br>
+	    <%= form.submit "Sign in" %>
+	<% end %>
+<span><%= link_to signup_url do %>Sign Up<% end %></span>
+<% end %>
