@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 	  		session[:email] = @user.email
 	  		session[:user_id] = @user.id
 
-	    	redirect_to root_path
+	    	redirect_to users_index_path
 		else
 			@message = 'Invalid - Log-in already exist and/or invalid password'
 		end
@@ -20,11 +20,21 @@ class UsersController < ApplicationController
 	def home
 	end
 
+	def index
+		if signed_in?
+			@investments = Investment.where(user: current_user.id).search(params[:symbol],params[:cost_min],current_user)
+			@symbols = @investments.distinct.pluck(:symbol)
+		else
+			redirect_to root_path
+		end	
+
+	end
+
 	def edit
 	    if current_user == User.find(params[:id])
 	  	   @user = current_user
 	    else
-	      redirect_to root_path
+	      redirect_to users_index_path
 	    end
   	end
 

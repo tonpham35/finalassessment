@@ -1,0 +1,14 @@
+<tr>
+    <td id='symbol<%=inv.id%>'><%= inv.symbol %></td>
+	<td id='quantity<%=inv.id%>'><%= inv.quantity %></td>
+	<td id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='cost<%=inv.id%>'><%= '$' + number_with_delimiter(inv.cost.round(0), :delimiter => ',').to_s %></td>
+	<td id='marketValue<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='gain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='gain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
+	<td id='date<%=inv.id%>'><%= inv.purchasedate.strftime("%D") %></td>
+	<td><%= link_to "Table", investment_path(inv.id) %></td>
+	<script>console.log(<%= inv.id %>)</script>
+</tr>

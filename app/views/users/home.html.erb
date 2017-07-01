@@ -1,12 +1,24 @@
 <% if signed_in? %>
+	<h2>Welcome <%= current_user.full_name %></h2>
 	<%= link_to session_path(current_user.id), method: :delete do %>Logout<% end %></span>
-<% else %>
-	<h2>Login</h2>
+	<h3>Please Enter Password</h3>
+	<p><%= current_user.email %></p>
 	<%= form_for :session, url: session_path do |form| %>
-	    <input type=text placeholder="Email" name="user[email]"><br>
+	    <input type=hidden value="<%= current_user.email %>" name="user[email]">
 	    <input type=password placeholder="Password" name="user[password]"></br>
 	    <%= form.submit "Sign in" %> 
 	    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
 	<% end %>
-<span><%= link_to signup_url do %>Sign Up<% end %></span>
+<span><%= link_to signup_url do %>Log In<% end %></span>
+<% else %>
+	<h3>Please Sign In</h3>
+	<%= form_for :session, url: session_path do |form| %>
+	    <input type=text placeholder="Email" name="user[email]">
+	    <input type=password placeholder="Password" name="user[password]"></br>
+	    <%= form.submit "Sign in" %> 
+	    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
+	<% end %>
+		<%= link_to "Sign Up", signup_path %>
+
+
 <% end %>

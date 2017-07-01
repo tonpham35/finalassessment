@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Users:</strong>
+  <%= @investment.users %>
+</p>
+
+<p>
+  <strong>Symbol:</strong>
+  <%= @investment.symbol %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @investment.quantity %>
+</p>
+
+<p>
+  <strong>Cost:</strong>
+  <%= @investment.cost %>
+</p>
+
+<p>
+  <strong>Purchasedate:</strong>
+  <%= @investment.purchasedate %>
+</p>
+
+<p>
+  <strong>Selldate:</strong>
+  <%= @investment.selldate %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @investment.status %>
+</p>
+
+<%= link_to 'Edit', edit_investment_path(@investment) %> |
+<%= link_to 'Back', investments_path %>

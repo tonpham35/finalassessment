@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  include UsersHelper
+
 	def create
 		@user = User.find_by(email: params[:user][:email])
 		session.clear
@@ -6,7 +8,7 @@ class SessionsController < ApplicationController
 	  		session[:email] = @user.email
 	  		session[:full_name] = @user.full_name
 	  		session[:user_id] = @user.id
-	    	redirect_to root_path
+	    	redirect_to users_path(@user.id)
 		else
 			@message = 'Invalid Log-in. Check email and password'
 		end
@@ -25,7 +27,7 @@ class SessionsController < ApplicationController
       if authentication.user
         user = authentication.user
         authentication.update_token(auth_hash)
-        @next = root_url
+        @next = users_index_path
         @notice = "Signed in!"
       # else: user logs in with OAuth for the first time
       else
@@ -38,7 +40,7 @@ class SessionsController < ApplicationController
       session[:email] = user.email
       session[:full_name] = user.full_name
       session[:user_id] = user.id
-      redirect_to root_path
+      redirect_to users_path(user.id)
 
     end
 end
