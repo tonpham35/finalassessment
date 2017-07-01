@@ -35,7 +35,7 @@
 
 	<% end %>
 
-	<%= form_tag users_index_path, :method => 'get' do %>
+	<%= form_tag users_index_path, :method => 'get', remote: true do %>
 		<label>Symbol</label>
 		<select name="symbol">
 			<option></option>
@@ -56,114 +56,8 @@
 	<% end %>
 
 	<div>
-
+		<%= render "investment" %>
 	</div>
-
-
-
-	<table id='myInvestments'>
-		<tr>
-			<th>Symbol</th>
-			<th>Quantity</th>
-			<th>Last</th>
-			<th>Cost</th>
-			<th>Market Value</th>
-			<th>Day Gain ($)</th>
-			<th>Day Gain (%)</th>
-			<th>Gain ($)</th>
-			<th>Gain (%)</th>
-			<th>Purchase Date (MM/DD/YY)</th>
-			<th>Analysis</th>
-		</tr>
-			<% total = 0 %>
-			<% @investments.each do |x| %> 
-				<% total += x.cost %>
-			<% end %>
-		<script>
-			var totMarketValue = 0
-			var totDayGain = 0
-			function total(){
-				document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
-				document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
-				var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
-				document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
-				var totGain = totMarketValue - <%= total %>
-				document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
-				var totGainPercent = 100 * ( totGain / <%= total %>)
-				document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
-			};
-		</script>
-
-		<% @investments.each do |x| %>
-			<tr>
-				<%= render partial: 'investment', locals: {inv: x} %>
-
-				<script>
-
-					$(document).ready(function() {
-
-						var requestURL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=<%= x.symbol %>&apikey=N6WB2563ACVSGIJV';
-
-						var request = new XMLHttpRequest();
-
-						request.open('GET', requestURL);
-
-						request.responseType = 'json';
-
-						request.send();
-
-						request.onload = function() {
-						  	var data = request.response;
-
-						  	var symbol = data["Realtime Global Securities Quote"]["01. Symbol"];
-						  	var latestPrice = data["Realtime Global Securities Quote"]["03. Latest Price"];
-						  	var openPrice = data["Realtime Global Securities Quote"]["04. Open (Current Trading Day)"]
-
-							document.getElementById("symbol<%=x.id%>").innerHTML = symbol;
-							document.getElementById("last<%=x.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
-							document.getElementById("marketValue<%=x.id%>").innerHTML = addCommas((<%= x.quantity %> * latestPrice).toFixed(2));
-							totMarketValue += (<%= x.quantity %> * latestPrice)
-							document.getElementById("dayGain$<%=x.id%>").innerHTML = addCommas((( latestPrice - openPrice ) * <%= x.quantity %>).toFixed(2));
-							totDayGain += (( latestPrice - openPrice ) * <%= x.quantity %>)
-							document.getElementById("dayGain%<%=x.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
-							document.getElementById("gain$<%=x.id%>").innerHTML = addCommas(((latestPrice * <%= x.quantity %>) - <%= x.cost %>).toFixed(2));
-							document.getElementById("gain%<%=x.id%>").innerHTML = (100*(((latestPrice * <%= x.quantity %>) - <%= x.cost %>) / <%= x.cost %>)).toFixed(3);
-							total();
-						}
-					});
-
-					function addCommas(nStr) {
-						nStr += '';
-						x = nStr.split('.');
-						x1 = x[0];
-						x2 = x.length > 1 ? '.' + x[1] : '';
-						var rgx = /(\d+)(\d{3})/;
-						while (rgx.test(x1)) {
-							x1 = x1.replace(rgx, '$1' + ',' + '$2');
-						}
-						return '$' + x1 + x2;
-					}
-				</script>
-
-			</tr>
-
-		<% end %>
-		<% if @investments.length != 0 %>
-		<tr>
-			<td>Total</td>
-			<td>-</td>
-			<td>-</td>
-			<td id='totalCost' value=0><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></td>
-			<td id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain$' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain%' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain$' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain%' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td>-</td>
-			<td>-</td>
-		</tr>
-		<% end %>
-	</table>
 
 
 <% else %>
