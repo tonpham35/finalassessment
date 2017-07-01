@@ -22,7 +22,7 @@ class UsersController < ApplicationController
 
 	def index
 		if signed_in?
-			@investments = Investment.where(user: current_user.id).search(params[:symbol],params[:cost_min],current_user)
+			@investments = Investment.where(user: current_user.id).search(params[:symbol],params[:cost_min],params[:cost_max],current_user)
 			@symbols = @investments.distinct.pluck(:symbol)
 		else
 			redirect_to root_path
