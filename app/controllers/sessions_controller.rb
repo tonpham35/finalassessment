@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
 	  		session[:email] = @user.email
 	  		session[:full_name] = @user.full_name
 	  		session[:user_id] = @user.id
-	    	redirect_to users_path(@user.id)
+	    	redirect_to users_index_path
 		else
 			@message = 'Invalid Log-in. Check email and password'
 		end
@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
       session[:email] = user.email
       session[:full_name] = user.full_name
       session[:user_id] = user.id
-      redirect_to users_path(user.id)
+      redirect_to users_index_path
 
     end
 end
