@@ -1,72 +1,59 @@
-<% if signed_in? %>
+
 	<h3>Welcome <%= current_user.full_name %></h3>
 	<%= link_to session_path(current_user.id), method: :delete do %>Logout<% end %></span>
 
 	<h2>Add New Investment</h2>
 
-	<%= form_for :investment, url: investments_path, remote: true do |form| %>
+	<%= form_for :investment, url: investments_path, remote: true do |form| %> <!-- Create New Investment Form, AJAX Functionality -->
 
-		<div class="field">
-			<%= form.hidden_field :user_id, :value => current_user.id %>
-		</div>
-		<div class="field">
+		<div class="field"> <!-- Stock Symbol Input -->
 			<%= form.label :symbol %>
 			<%= form.text_field :symbol, id: :investment_symbol %>
 		</div>
 
-		<div class="field">
+		<div class="field"> <!-- Quanity Integer -->
 			<%= form.label :quantity %>
 			<%= form.number_field :quantity, id: :investment_quantity %>
 		</div>
 
-		<div class="field">
+		<div class="field"> <!-- Cost Float -->
 			<%= form.label :cost %>
 			<%= form.text_field :cost, id: :investment_cost %>
 		</div>
 
-		<div class="field">
-			<label>Purchase Date</label>
-			<%= form.date_select :purchasedate, id: :investment_purchasedate %>
+		<div class="field"> <!-- Purchase DateTime -->
+			<!-- Future Dates and Saturday/Sundays Disabled -->
+			<p>Purchase Date: <input type="text" id="datepicker" name="investment[purchasedate]"></p>
+
 		</div>
 
-		<div class="actions">
+		<div class="actions"> <!-- Submit Create Investment / AJAX -->
 			<%= form.submit %>
 		</div>
 
 	<% end %>
 
-	<%= form_tag users_index_path, :method => 'get', remote: true do %>
-		<label>Symbol</label>
+
+	<%= form_tag users_index_path, :method => 'get', remote: true do %> <!-- Current Investments Search Function with AJAX -->
+		<label>Symbol</label>	<!-- Search with Labels. Selector allow only investment Symbols that the User created -->
 		<select name="symbol">
 			<option></option>
-			<% @symbols.each do |x| %>
-				<option value="<%= x %>"><%= x %></option>
+			<% @symbols.each do |x| %> <!-- Loops Symbols. @symbol is a list of distinct symbols -->
+				<option value="<%= x %>"><%= x %></option> <!-- x is the symbols from @symbol array -->
 			<% end %>
 		</select>
 
-		<label>Cost Min</label>
+		<label>Cost Min</label> <!-- Search with cost. Search returns Cost greater or equal than value -->
 		<input type="number_with_delimiter" name="cost_min"></input>
 
-		<label>Cost Max</label>
+		<label>Cost Max</label> <!-- Search with cost. Search returns Cost less or equal than value -->
 		<input type="number_with_delimiter" name="cost_max"></input>
 
-		<div class="actions">
+		<div class="actions"> <!-- Submit Search Investment / AJAX -->
 			<%= submit_tag "Search", :name => nil %>
 		</div>
 	<% end %>
 
 	<div>
-		<%= render "investment" %>
+		<%= render "investment" %> <!-- render partial _investment.html.erb when opening page, search AJAX, and create AJAX -->
 	</div>
-
-
-<% else %>
-	<h2>Login</h2>
-	<%= form_for :session, url: session_path do |form| %>
-	    <input type=text placeholder="Email" name="user[email]"><br>
-	    <input type=password placeholder="Password" name="user[password]"></br>
-	    <%= form.submit "Sign in" %> 
-	    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
-	<% end %>
-<span><%= link_to signup_url do %>Sign Up<% end %></span>
-<% end %>

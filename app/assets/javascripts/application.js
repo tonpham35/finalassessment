@@ -12,4 +12,14 @@
 //
 //= require rails-ujs
 //= require turbolinks
+//= require jquery
+//= require bootstrap-sprockets
 //= require_tree .
+
+$( function() {
+	$( "#datepicker" ).datepicker({ 
+		beforeShowDay: $.datepicker.noWeekends,
+		dateFormat: "dd-mm-yy",
+		maxDate: new Date
+	});
+} );
