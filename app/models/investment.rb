@@ -2,6 +2,15 @@ class Investment < ApplicationRecord
 	include UsersHelper
 	belongs_to :user
 
+	validates :symbol, :cost, :quantity, :purchasedate, presence: {message: "Please fill-in all fields" }
+	validates :cost, :quantity, :numericality => { :greater_than_or_equal_to => 0, message: 'Must be Positive' }
+	validate :purchasedate_cannot_be_in_the_future,
+
+  def purchasedate_cannot_be_in_the_future
+    errors.add(:purchasedate, "can't be in the future") if
+      !purchasedate.blank? and purchasedate < Date.today
+  end
+
 
 	def self.search(symbol, cost_min, cost_max, user)
 		@investment = Investment.where(user_id: user.id)
