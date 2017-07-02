@@ -29,15 +29,14 @@ class InvestmentsController < ApplicationController
   # POST /investments.json
   def create
     @investment = current_user.investments.new(investment_params)
-
-    respond_to do |format|
-      if @investment.save
+    if @investment.save
+      @investments = Investment.where(user_id: current_user.id)
+      respond_to do |format|
         format.html { redirect_to users_index_path, notice: 'Investment was successfully created.' }
-        format.json {}
-      else
-        format.html { render :new }
-        format.json { render json: @investment.errors, status: :unprocessable_entity }
+        format.js
       end
+    else
+      users_index_path
     end
   end
 
