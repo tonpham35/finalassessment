@@ -1,17 +1,11 @@
-<% if signed_in? %>
-	<h2>Welcome <%= current_user.full_name %></h2>
+<!-- if user in signed in, the user controller def home will redirect user to user index page -->
+<h3>Please Sign In</h3>
 
-	<%= link_to "Go to Your Page", users_index_path %>
+<%= form_for :session, url: session_path do |form| %> <!-- sign in form -->
+	<input type=text placeholder="Email" name="user[email]"> <!-- user email -->
+	<input type=password placeholder="Password" name="user[password]"></br> <!-- user password encrypted with bcrypt -->
+	<%= form.submit "Sign in" %> <!-- Submit Button -->
+	<%= link_to "Sign in with Facebook", "/auth/facebook" %> <!-- User can use Facebook OmniAuth to sign in/up  -->
+<% end %><br>
 
-<% else %>
-	<h3>Please Sign In</h3>
-	<%= form_for :session, url: session_path do |form| %>
-	    <input type=text placeholder="Email" name="user[email]">
-	    <input type=password placeholder="Password" name="user[password]"></br>
-	    <%= form.submit "Sign in" %> 
-	    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
-	<% end %>
-		<%= link_to "Sign Up", signup_path %>
-
-
-<% end %>
+<%= link_to "Sign Up", signup_path %> <!-- sign up path link-->

@@ -1,7 +1,9 @@
 <h2>Sign up for an account!</h2>
-<%= form_for :user, url: users_path do |form| %>
-	<input type=text placeholder="Full Name" name="user[full_name]"><br>
-    <input type=text placeholder="Email" name="user[email]"><br>
-    <input type=password placeholder="Password" name="user[password]"></br>
-    <%= form.submit :Submit %>
-<% end %>
+<%= form_for :user, url: users_path do |form| %> <!-- sign up form -->
+	<input type=text placeholder="Full Name" name="user[full_name]"><br> <!-- user full name string -->
+    <input type=text placeholder="Email" name="user[email]"><br> <!-- user email -->
+    <input type=password placeholder="Password" name="user[password]"></br> <!-- user password encrypted with bcrypt -->
+    <%= form.submit :Submit %> <!-- Submit Button -->
+<% end %><br>
+
+<%= link_to "Sign up with Facebook", "/auth/facebook" %> <!-- User can use Facebook OmniAuth to sign in/up  -->

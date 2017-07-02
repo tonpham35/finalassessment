@@ -14,7 +14,15 @@
  *= require_self
  */
 
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
 #loader {
 	height: 15px;
 	width: 15px;
+}
+
+#ui-datepicker-div {
+	background-color: white;
+	border:1px solid black;
 }

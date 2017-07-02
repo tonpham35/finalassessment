@@ -1,54 +1,43 @@
-<table id='myInvestments'>
-		<tr>
-			<th>Symbol</th>
-			<th>Quantity</th>
-			<th>Last</th>
-			<th>Cost</th>
-			<th>Market Value</th>
-			<th>Day Gain ($)</th>
-			<th>Day Gain (%)</th>
-			<th>Gain ($)</th>
-			<th>Gain (%)</th>
-			<th>Purchase Date (MM/DD/YY)</th>
-			<th>Analysis</th>
-		</tr>
-			<% total = 0 %>
-			<% @investments.each do |x| %> 
-				<% total += x.cost %>
-			<% end %>
-		<script>
-			var totMarketValue = 0
-			var totDayGain = 0
-			function total(){
-				document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
-				document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
-				var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
-				document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
-				var totGain = totMarketValue - <%= total %>
-				document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
-				var totGainPercent = 100 * ( totGain / <%= total %>)
-				document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
-			};
-		</script>
+<table id='myInvestments'> <!-- User Investments Table Show different Attributes -->
+	<tr> <!-- Table Header -->
+		<th>Symbol</th>
+		<th>Quantity</th>
+		<th>Last</th>
+		<th>Cost</th>
+		<th>Market Value</th>
+		<th>Day Gain ($)</th>
+		<th>Day Gain (%)</th>
+		<th>Gain ($)</th>
+		<th>Gain (%)</th>
+		<th>Purchase Date (MM/DD/YY)</th>
+		<th>Analysis</th>
+	</tr>
 
-<% @investments.each do |inv| %>
-	<tr>
-	    <td id='symbol<%=inv.id%>'><%= inv.symbol %></td>
-		<td id='quantity<%=inv.id%>'><%= inv.quantity %></td>
-		<td id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='cost<%=inv.id%>'><%= '$' + number_with_delimiter(inv.cost.round(0), :delimiter => ',').to_s %></td>
-		<td id='marketValue<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='gain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='gain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td>
-		<td id='date<%=inv.id%>'><%= inv.purchasedate.strftime("%D") %></td>
-		<td><%= link_to "Table", investment_path(inv.id) %></td>
+	<% total = 0 %> <!-- initial value of total investment total cost -->
+	<% @investments.each do |x| %> <!-- loop all investments to sums up total investment cost -->
+		<% total += x.cost %>
+	<% end %>
+
+	<% @investments.each do |inv| %> <!-- Loops all of the User's investments and calculates attribues values from database and parsed data from JSON API -->
+		<tr> <!-- Start of row -->
+		    <td id='symbol<%=inv.id%>'><%= inv.symbol %></td> <!-- Stock Symbol -->
+			<td id='quantity<%=inv.id%>'><%= inv.quantity %></td> <!-- Stock Quantity -->
+			<td id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Individual Share Lastest Value. While loading a kloader gif is displayed. After data loaded from JSON API, value is displayed -->
+			<td id='cost<%=inv.id%>'><%= '$' + number_with_delimiter(inv.cost.round(0), :delimiter => ',').to_s %></td> <!-- Investment cost $ -->
+			<td id='marketValue<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Market Value -->
+			<td id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain $ -->
+			<td id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain % -->
+			<td id='gain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain $ -->
+			<td id='gain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain % -->
+			<td id='date<%=inv.id%>'><%= inv.purchasedate.strftime("%D") %></td> <!-- Date of Purchase -->
+			<td><%= link_to "Performance", investment_path(inv.id) %></td> <!-- Link to see individual investment's performance -->
+		</tr>
 		<script>
 			$(document).ready(function() {
+				// URL of stock's Global Quotes. a symbol is needed to distinguish different stock data. 
+				var requestURL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=<%= inv.symbol %>&apikey=N6WB2563ACVSGIJV'; 
 
-				var requestURL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=<%= inv.symbol %>&apikey=N6WB2563ACVSGIJV';
-
+				// functions to parse JSON API Data
 				var request = new XMLHttpRequest();
 
 				request.open('GET', requestURL);
@@ -57,13 +46,16 @@
 
 				request.send();
 
+				// after the data is loaded from the API source. These tasks are performed
 				request.onload = function() {
-				  	var data = request.response;
+				  	var data = request.response; //JSON data is stored in data variable
 
+				  	//different datapoints from API
 				  	var symbol = data["Realtime Global Securities Quote"]["01. Symbol"];
 				  	var latestPrice = data["Realtime Global Securities Quote"]["03. Latest Price"];
 				  	var openPrice = data["Realtime Global Securities Quote"]["04. Open (Current Trading Day)"]
 
+				  	//calculation of different data points. After they are calculated the datapoints replace the loader gif in the user's investment table.
 					document.getElementById("symbol<%=inv.id%>").innerHTML = symbol;
 					document.getElementById("last<%=inv.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
 					document.getElementById("marketValue<%=inv.id%>").innerHTML = addCommas((<%= inv.quantity %> * latestPrice).toFixed(2));
@@ -77,35 +69,53 @@
 				}
 			});
 
+			//function to add commas to number
 			function addCommas(nStr) {
-				nStr += '';
-				x = nStr.split('.');
-				x1 = x[0];
+				nStr += ''; //turns number into a string
+				x = nStr.split('.'); //number string becomes an array. if number string has a decimal. the decimal section is split from the string. x[0] is the whole numbers. x[1] is the decimals.
+				x1 = x[0]; //x1 is the whole numbers
 				x2 = x.length > 1 ? '.' + x[1] : '';
-				var rgx = /(\d+)(\d{3})/;
-				while (rgx.test(x1)) {
+				var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
+				while (rgx.test(x1)) {	//loops the rex and adds a comma in between pairs are 3
 					x1 = x1.replace(rgx, '$1' + ',' + '$2');
 				}
-				return '$' + x1 + x2;
+				return '$' + x1 + x2; //returns delimited number and includes a $ in front.
 			}
 		</script>
-		<script>console.log(<%= inv.id %>)</script>
-	</tr>
-<% end %>
+		<script>console.log(<%= inv.id %>)</script> <!-- console.log for testing purposes only -->
+	<% end %>
 
-		<% if @investments.length != 0 %>
+	<script> //script to calculate total of different attributes of User's investments
+		var totMarketValue = 0 //initial value of current investment Market values
+		var totDayGain = 0 //initial value of current investment day gains
+
+		//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
+		//the these investment attribues as data is loaded.
+		function total(){ 
+			document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
+			document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
+			var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
+			document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
+			var totGain = totMarketValue - <%= total %>
+			document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
+			var totGainPercent = 100 * ( totGain / <%= total %>)
+			document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
+		};
+	</script>
+
+	<% if @investments.length != 0 %> <!-- if user has more than 1 investment row is generated. it displays the total values of all investments. data is from script above -->
 		<tr>
 			<td>Total</td>
 			<td>-</td>
 			<td>-</td>
-			<td id='totalCost' value=0><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></td>
+			<td id='totalCost'><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></td>
 			<td id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain$' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain%' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain$' value=0><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain%' value=0><img src="/assets/kloader.gif" id='loader'></td>
+			<td id='totalDayGain$'><img src="/assets/kloader.gif" id='loader'></td>
+			<td id='totalDayGain%'><img src="/assets/kloader.gif" id='loader'></td>
+			<td id='totalGain$'><img src="/assets/kloader.gif" id='loader'></td>
+			<td id='totalGain%'><img src="/assets/kloader.gif" id='loader'></td>
 			<td>-</td>
 			<td>-</td>
 		</tr>
-		<% end %>
-	</table>
+	<% end %>
+</table>

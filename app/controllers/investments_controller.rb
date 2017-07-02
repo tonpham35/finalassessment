@@ -11,6 +11,9 @@ class InvestmentsController < ApplicationController
   # GET /investments/1
   # GET /investments/1.json
   def show
+      if current_user != @investment.user
+        redirect_to users_index_path
+      end
   end
 
   # GET /investments/new
@@ -26,7 +29,7 @@ class InvestmentsController < ApplicationController
   # POST /investments.json
   def create
     @investment = current_user.investments.new(investment_params)
-    
+
     respond_to do |format|
       if @investment.save
         format.html { redirect_to users_index_path, notice: 'Investment was successfully created.' }
@@ -70,6 +73,6 @@ class InvestmentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def investment_params
-      params.require(:investment).permit(:symbol, :quantity, :cost, :purchasedate, :selldate, :status)
+      params.require(:investment).permit(:symbol, :quantity, :cost, :selldate, :status, :purchasedate)
     end
 end
