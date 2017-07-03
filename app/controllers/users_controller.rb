@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 	    	redirect_to users_index_path
 		else
 			@message = 'Invalid - Log-in already exist and/or invalid password'
+			redirect_to root_path
 		end
 	end 
 
