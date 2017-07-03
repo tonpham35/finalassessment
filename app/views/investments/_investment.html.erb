@@ -1,38 +1,45 @@
-<table id='myInvestments'> <!-- User Investments Table Show different Attributes -->
-	<tr> <!-- Table Header -->
-		<th>Symbol</th>
-		<th>Quantity</th>
-		<th>Last</th>
-		<th>Cost</th>
-		<th>Market Value</th>
-		<th>Day Gain ($)</th>
-		<th>Day Gain (%)</th>
-		<th>Gain ($)</th>
-		<th>Gain (%)</th>
-		<th>Purchase Date (MM/DD/YY)</th>
-		<th>Analysis</th>
-	</tr>
+
+<% if @investments.count > 0 %>
+<div id='myInvestments'><!-- User Investments Table Show different Attributes -->
 
 	<% total = 0 %> <!-- initial value of total investment total cost -->
 	<% @investments.each do |x| %> <!-- loop all investments to sums up total investment cost -->
 		<% total += x.cost %>
 	<% end %>
 
-	<% @investments.each do |inv| %> <!-- Loops all of the User's investments and calculates attribues values from database and parsed data from JSON API -->
-		<tr> <!-- Start of row -->
-		    <td id='symbol<%=inv.id%>'><%= inv.symbol %></td> <!-- Stock Symbol -->
-			<td id='quantity<%=inv.id%>'><%= inv.quantity %></td> <!-- Stock Quantity -->
-			<td id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Individual Share Lastest Value. While loading a kloader gif is displayed. After data loaded from JSON API, value is displayed -->
-			<td id='cost<%=inv.id%>'><%= '$' + number_with_delimiter(inv.cost.round(0), :delimiter => ',').to_s %></td> <!-- Investment cost $ -->
-			<td id='marketValue<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Market Value -->
-			<td id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain $ -->
-			<td id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain % -->
-			<td id='gain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain $ -->
-			<td id='gain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain % -->
-			<td id='date<%=inv.id%>'><%= inv.purchasedate.strftime("%D") %></td> <!-- Date of Purchase -->
-			<td><%= link_to "Performance", investment_path(inv.id) %></td> <!-- Link to see individual investment's performance -->
-		</tr>
-		<script>
+	<div class ="row" style="margin:10px 2px 4px 10px;">
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Cost:</b><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></div>
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Market Value:</b><span id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain($):</b><span id='totalGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain(%):</b><span id='totalGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain($):</b><span id='totalDayGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain(%):</b><span id='totalDayGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
+	</div>
+
+	<!-- Loops all of the User's investments and calculates attribues values from database and parsed data from JSON API -->
+	<div class ="row" style="margin:10px 2px 4px 10px;">
+		<% @investments.each do |inv| %> <!-- start of card loop -->
+				<!--Investment Cards -->
+				<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
+				    <div class="card">
+				    	<!-- Card media heading -->
+				        <div class="media-body">
+				            <%= link_to investment_path(inv.id) do %>
+				            	<h2 style="margin-top: 3px;"><span id='symbol<%=inv.id%>'><%= inv.symbol %></span></h2> 
+				            <% end %>
+				            <div class="row">
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Quantity(#):</b> <%= inv.quantity %></div>
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Cost:</b> <span id='cost<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Last($):</b> <span id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Value($):</b> <span id='value<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Day Gain ($):</b> <span id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
+				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Day Gain (%):</b> <span id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
+				            </div>	
+				            <%= link_to inv, method: :delete, data: { confirm: 'Are you sure?' } do %> <span style="font-size: 10px"> Delete <%= inv.symbol %></span> <% end %><span style="font-size: 5px"> Created with AJAX</span>
+				        </div>
+					</div>
+				</div>
+			<script>
 			$(document).ready(function() {
 				// URL of stock's Global Quotes. a symbol is needed to distinguish different stock data. 
 				var requestURL = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=<%= inv.symbol %>&apikey=N6WB2563ACVSGIJV'; 
@@ -48,23 +55,28 @@
 
 				// after the data is loaded from the API source. These tasks are performed
 				request.onload = function() {
+
 				  	var data = request.response; //JSON data is stored in data variable
 
 				  	//different datapoints from API
 				  	var symbol = data["Realtime Global Securities Quote"]["01. Symbol"];
 				  	var latestPrice = data["Realtime Global Securities Quote"]["03. Latest Price"];
-				  	var openPrice = data["Realtime Global Securities Quote"]["04. Open (Current Trading Day)"]
+				  	var openPrice = data["Realtime Global Securities Quote"]["04. Open (Current Trading Day)"];
+				  	var cost = <%= inv.cost %>;
 
 				  	//calculation of different data points. After they are calculated the datapoints replace the loader gif in the user's investment table.
+
+				  	totMarketValue += (<%= inv.quantity %> * latestPrice);
+				  	totDayGain += (( latestPrice - openPrice ) * <%= inv.quantity %>);
+				  	var value = (<%= inv.quantity %> * latestPrice);
+
 					document.getElementById("symbol<%=inv.id%>").innerHTML = symbol;
+					document.getElementById("cost<%=inv.id%>").innerHTML = addCommas2(value);
+					document.getElementById("value<%=inv.id%>").innerHTML = addCommas2(cost)
 					document.getElementById("last<%=inv.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
-					document.getElementById("marketValue<%=inv.id%>").innerHTML = addCommas((<%= inv.quantity %> * latestPrice).toFixed(2));
-					totMarketValue += (<%= inv.quantity %> * latestPrice)
-					document.getElementById("dayGain$<%=inv.id%>").innerHTML = addCommas((( latestPrice - openPrice ) * <%= inv.quantity %>).toFixed(2));
-					totDayGain += (( latestPrice - openPrice ) * <%= inv.quantity %>)
+					document.getElementById("dayGain$<%=inv.id%>").innerHTML = addCommas(( latestPrice - openPrice ).toFixed(2));
 					document.getElementById("dayGain%<%=inv.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
-					document.getElementById("gain$<%=inv.id%>").innerHTML = addCommas(((latestPrice * <%= inv.quantity %>) - <%= inv.cost %>).toFixed(2));
-					document.getElementById("gain%<%=inv.id%>").innerHTML = (100*(((latestPrice * <%= inv.quantity %>) - <%= inv.cost %>) / <%= inv.cost %>)).toFixed(3);
+
 					total();
 				}
 			});
@@ -81,10 +93,24 @@
 				}
 				return '$' + x1 + x2; //returns delimited number and includes a $ in front.
 			}
-		</script>
-		<script>console.log(<%= inv.id %>)</script> <!-- console.log for testing purposes only -->
-	<% end %>
+						//function to add commas to number
+			function addCommas2(nStr) {
+				nStr += ''; //turns number into a string
+				x = nStr.split('.'); //number string becomes an array. if number string has a decimal. the decimal section is split from the string. x[0] is the whole numbers. x[1] is the decimals.
+				x1 = x[0]; //x1 is the whole numbers
+				x2 = x.length > 1 ? '.' + x[1] : '';
+				var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
+				while (rgx.test(x1)) {	//loops the rex and adds a comma in between pairs are 3
+					x1 = x1.replace(rgx, '$1' + ',' + '$2');
+				}
+				return '$' + x1; //returns delimited number and includes a $ in front.
+			}
 
+			</script>
+			<script>console.log(<%= inv.id %>)</script> <!-- console.log for testing purposes only -->
+
+		<% end %> <!-- end of card loop -->
+	</div>
 	<script> //script to calculate total of different attributes of User's investments
 		var totMarketValue = 0 //initial value of current investment Market values
 		var totDayGain = 0 //initial value of current investment day gains
@@ -102,20 +128,5 @@
 			document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
 		};
 	</script>
-
-	<% if @investments.length != 0 %> <!-- if user has more than 1 investment row is generated. it displays the total values of all investments. data is from script above -->
-		<tr>
-			<td>Total</td>
-			<td>-</td>
-			<td>-</td>
-			<td id='totalCost'><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></td>
-			<td id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain$'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalDayGain%'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain$'><img src="/assets/kloader.gif" id='loader'></td>
-			<td id='totalGain%'><img src="/assets/kloader.gif" id='loader'></td>
-			<td>-</td>
-			<td>-</td>
-		</tr>
-	<% end %>
-</table>
+</div>
+<% end %>

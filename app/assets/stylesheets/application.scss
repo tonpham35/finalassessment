@@ -10,12 +10,14 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
- *= require_self
  */
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+/* Bootstrap css */
+@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css";
+
 
 #loader {
 	height: 15px;
@@ -25,4 +27,14 @@
 #ui-datepicker-div {
 	background-color: white;
 	border:1px solid black;
+}
+
+.media-body {
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+	padding: 4px;
+}
+
+.card {
+	padding: 5px 0px 5px 0px;
 }
