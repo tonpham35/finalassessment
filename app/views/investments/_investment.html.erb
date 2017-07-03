@@ -8,19 +8,19 @@
 	<% end %>
 
 	<div class ="row" style="margin:10px 2px 4px 10px;">
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Cost:</b><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></div>
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Market Value:</b><span id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></span></div>
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain($):</b><span id='totalGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain(%):</b><span id='totalGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain($):</b><span id='totalDayGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
-		<div class="col-xs-6 col-lg-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain(%):</b><span id='totalDayGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Cost:</b><%= '$' + number_with_delimiter(total.round(0), :delimiter => ',').to_s %></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Market Value:</b><span id='totalMarketValue'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain($):</b><span id='totalGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain(%):</b><span id='totalGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain($):</b><span id='totalDayGain$'><img src="/assets/kloader.gif" id='loader'></span></div>
+		<div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Day Gain(%):</b><span id='totalDayGain%'><img src="/assets/kloader.gif" id='loader'></span></div>
 	</div>
 
 	<!-- Loops all of the User's investments and calculates attribues values from database and parsed data from JSON API -->
 	<div class ="row" style="margin:10px 2px 4px 10px;">
 		<% @investments.each do |inv| %> <!-- start of card loop -->
 				<!--Investment Cards -->
-				<div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
+				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 				    <div class="card">
 				    	<!-- Card media heading -->
 				        <div class="media-body">
@@ -93,7 +93,8 @@
 				}
 				return '$' + x1 + x2; //returns delimited number and includes a $ in front.
 			}
-						//function to add commas to number
+			
+			//function to add commas to number, removes decimal points
 			function addCommas2(nStr) {
 				nStr += ''; //turns number into a string
 				x = nStr.split('.'); //number string becomes an array. if number string has a decimal. the decimal section is split from the string. x[0] is the whole numbers. x[1] is the decimals.

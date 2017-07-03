@@ -1,15 +1,21 @@
-<p>Symbol: <%= @investment.symbol %></p>
-<p>Cost($): <%= @investment.cost %>
-<p>Closing Price($): <span id="closingPriceSpan"><img src="/assets/kloader.gif" id='loader'></span></p>
-<p>Day Change($): <span id="dayChange$"><img src="/assets/kloader.gif" id='loader'></span></p>
-<p>Day Change(%): <span id="dayChange%"><img src="/assets/kloader.gif" id='loader'></span></p>
-<p>Quantity(#): <%= @investment.quantity %></p>
-<p>Market Value($): <span id="marketValue$"><img src="/assets/kloader.gif" id='loader'></span></p>
-<p>Gain($): <span id="gain$"><img src="/assets/kloader.gif" id='loader'></span></p>
-<p>Gain(%): <span id="gain%"><img src="/assets/kloader.gif" id='loader'></span></p>
+<div style="float: right;">
+  <%= link_to 'Back', users_index_path %>
+</div>
+<h2 class="text-center"> Your Investment in <%= @investment.symbol %> </h2>
 
-<div style="height: 10%; width: 50%;">
-<canvas id="myChart" width="100%" height="100"></canvas>
+<div class ="row" style="margin:10px 2px 4px 10px;">
+  <div class="col-xs-12" style="margin-top: 2px; font-size: 20px;"><b>Symbol: </b><%= @investment.symbol %></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Cost: </b><%= '$' + number_with_delimiter(@investment.cost.round(0), :delimiter => ',').to_s %></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Market Value: </b><span id="marketValue$"><img src="/assets/kloader.gif" id='loader'></span></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Closing/Current Price: </b><span id="closingPriceSpan"><img src="/assets/kloader.gif" id='loader'></span></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Day Gain($): </b><span id="dayChange$"><img src="/assets/kloader.gif" id='loader'></span></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Day Gain(%): </b><span id="dayChange%"><img src="/assets/kloader.gif" id='loader'></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain($): </b><span id="gain$"><img src="/assets/kloader.gif" id='loader'></div>
+  <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 2px; font-size: 20px;"><b>Total Gain(%): </b><span id="gain%"><img src="/assets/kloader.gif" id='loader'></span></div>
+</div>
+
+<div class ='text-center' style="height: 400px; width: 90%;">
+  <canvas id="myChart" width="100%" height="100"></canvas>
 </div>
 <script>
   $(document).ready(function() {
@@ -59,14 +65,15 @@
       var dayChangeDollar = closingPrice - openingPrice; 
       var dayChangePercent = (dayChangeDollar / openingPrice) * 100;
       var marketValue = closingPrice * <%= @investment.quantity %>
-      document.getElementById("closingPriceSpan").innerHTML = closingPrice;
+      document.getElementById("closingPriceSpan").innerHTML = addCommas((1 * closingPrice).toFixed(2));
       document.getElementById("dayChange$").innerHTML = dayChangeDollar.toFixed(3);
       document.getElementById("dayChange%").innerHTML = dayChangePercent.toFixed(3);
-      document.getElementById("marketValue$").innerHTML = marketValue.toFixed(2);
-      document.getElementById("gain$").innerHTML = (marketValue.toFixed(2) - <%= @investment.cost %>) * 100;
+      document.getElementById("marketValue$").innerHTML = addCommas2(marketValue);
+      document.getElementById("gain$").innerHTML = addCommas((marketValue.toFixed(2) - <%= @investment.cost %>).toFixed(2));
       document.getElementById("gain%").innerHTML = (100 * (( marketValue.toFixed(2) - <%= @investment.cost %> ) / <%= @investment.cost %>)).toFixed(3);
 
       var canvas = document.getElementById('myChart');
+      canvas.height = 40;
 
       var data = {
           labels: label.reverse(),
@@ -106,7 +113,30 @@
     }
   });
 
-</script>
+  //function to add commas to number
+  function addCommas(nStr) {
+    nStr += ''; //turns number into a string
+    x = nStr.split('.'); //number string becomes an array. if number string has a decimal. the decimal section is split from the string. x[0] is the whole numbers. x[1] is the decimals.
+    x1 = x[0]; //x1 is the whole numbers
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
+    while (rgx.test(x1)) {  //loops the rex and adds a comma in between pairs are 3
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return '$' + x1 + x2; //returns delimited number and includes a $ in front.
+  }
 
-<%= link_to 'Edit', edit_investment_path(@investment) %> |
-<%= link_to 'Back', investments_path %>
+  //function to add commas to number, removes decimal points
+  function addCommas2(nStr) {
+    nStr += ''; //turns number into a string
+    x = nStr.split('.'); //number string becomes an array. if number string has a decimal. the decimal section is split from the string. x[0] is the whole numbers. x[1] is the decimals.
+    x1 = x[0]; //x1 is the whole numbers
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
+    while (rgx.test(x1)) {  //loops the rex and adds a comma in between pairs are 3
+      x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return '$' + x1; //returns delimited number and includes a $ in front.
+  }
+
+</script>
