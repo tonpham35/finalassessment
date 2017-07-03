@@ -13,15 +13,6 @@ class InvestmentsController < ApplicationController
   # POST /investments
   # POST /investments.json
   def create
-<<<<<<< HEAD
-    @investment = current_user.investments.new(investment_params)
-    
-    if @investment.save
-      @investments = Investment.where(user_id: current_user.id)
-      respond_to do |format|
-        format.html { redirect_to users_index_path, notice: 'Investment was successfully created.' }
-        format.js
-=======
     if signed_in?
       @investment = current_user.investments.new(investment_params)
 
@@ -33,7 +24,6 @@ class InvestmentsController < ApplicationController
         end
       else
         users_index_path
->>>>>>> 2ee5f0dda38d36c60eaeb2397a95f1ebcc38cd6c
       end
     else
       redirect_to root_path
