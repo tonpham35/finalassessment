@@ -2,8 +2,8 @@
 <h3>Please Sign In</h3>
 
 <%= form_for :session, url: session_path do |form| %> <!-- sign in form -->
-	<input type=text placeholder="Email" name="user[email]"> <!-- user email -->
-	<input type=password placeholder="Password" name="user[password]"></br> <!-- user password encrypted with bcrypt -->
+	<input type=text placeholder="Email" name="user[email]" id='email'> <!-- user email -->
+	<input type=password placeholder="Password" name="user[password]" id='password'></br> <!-- user password encrypted with bcrypt -->
 	<%= form.submit "Sign in" %> <!-- Submit Button -->
 	<%= link_to "Sign in with Facebook", "/auth/facebook" %> <!-- User can use Facebook OmniAuth to sign in/up  -->
 <% end %><br>

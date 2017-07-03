@@ -1,37 +1,34 @@
-<table id='myInvestments'> <!-- User Investments Table Show different Attributes -->
-	<tr> <!-- Table Header -->
-		<th>Symbol</th>
-		<th>Quantity</th>
-		<th>Last</th>
-		<th>Cost</th>
-		<th>Market Value</th>
-		<th>Day Gain ($)</th>
-		<th>Day Gain (%)</th>
-		<th>Gain ($)</th>
-		<th>Gain (%)</th>
-		<th>Purchase Date (MM/DD/YY)</th>
-		<th>Analysis</th>
-	</tr>
 
+<% if @investments.count > 0 %>
+<div class="row" id='myInvestments'><!-- User Investments Table Show different Attributes -->
 	<% total = 0 %> <!-- initial value of total investment total cost -->
 	<% @investments.each do |x| %> <!-- loop all investments to sums up total investment cost -->
 		<% total += x.cost %>
 	<% end %>
 
 	<% @investments.each do |inv| %> <!-- Loops all of the User's investments and calculates attribues values from database and parsed data from JSON API -->
-		<tr> <!-- Start of row -->
-		    <td id='symbol<%=inv.id%>'><%= inv.symbol %></td> <!-- Stock Symbol -->
-			<td id='quantity<%=inv.id%>'><%= inv.quantity %></td> <!-- Stock Quantity -->
-			<td id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Individual Share Lastest Value. While loading a kloader gif is displayed. After data loaded from JSON API, value is displayed -->
-			<td id='cost<%=inv.id%>'><%= '$' + number_with_delimiter(inv.cost.round(0), :delimiter => ',').to_s %></td> <!-- Investment cost $ -->
-			<td id='marketValue<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Market Value -->
-			<td id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain $ -->
-			<td id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Day Gain % -->
-			<td id='gain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain $ -->
-			<td id='gain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></td> <!-- Calculated Total Gain % -->
-			<td id='date<%=inv.id%>'><%= inv.purchasedate.strftime("%D") %></td> <!-- Date of Purchase -->
-			<td><%= link_to "Performance", investment_path(inv.id) %></td> <!-- Link to see individual investment's performance -->
-		</tr>
+		<%= link_to investment_path(inv.id) do %><div class="card col-sm-4">
+			<div class="card">
+  				<div class="card-block">
+					<div class='row'>
+						<div class='col-xs-6'><!-- Stock Symbol -->
+							<span>Symbol: </span><span id='symbol<%=inv.id%>'><%= inv.symbol %></span>
+						</div>
+						<div class='col-xs-6'><!-- Individual Share Lastest Value. While loading a kloader gif is displayed. After data loaded from JSON API, value is displayed -->
+							<span>Last: </span><span id='last<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span> 
+						</div>
+						<div class='col-xs-6'><!-- Calculated Day Gain $ -->
+							<span>Day Gain ($): </span><span id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span>
+						</div>
+						<div class='col-xs-6'><!-- Calculated Day Gain % -->
+							<span>Day Gain (%): </span><span id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span>
+						</div>
+					</div>
+  				</div>
+			</div>
+
+		<% end %>
+
 		<script>
 			$(document).ready(function() {
 				// URL of stock's Global Quotes. a symbol is needed to distinguish different stock data. 
@@ -48,6 +45,7 @@
 
 				// after the data is loaded from the API source. These tasks are performed
 				request.onload = function() {
+
 				  	var data = request.response; //JSON data is stored in data variable
 
 				  	//different datapoints from API
@@ -58,13 +56,12 @@
 				  	//calculation of different data points. After they are calculated the datapoints replace the loader gif in the user's investment table.
 					document.getElementById("symbol<%=inv.id%>").innerHTML = symbol;
 					document.getElementById("last<%=inv.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
-					document.getElementById("marketValue<%=inv.id%>").innerHTML = addCommas((<%= inv.quantity %> * latestPrice).toFixed(2));
+
 					totMarketValue += (<%= inv.quantity %> * latestPrice)
 					document.getElementById("dayGain$<%=inv.id%>").innerHTML = addCommas((( latestPrice - openPrice ) * <%= inv.quantity %>).toFixed(2));
 					totDayGain += (( latestPrice - openPrice ) * <%= inv.quantity %>)
 					document.getElementById("dayGain%<%=inv.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
-					document.getElementById("gain$<%=inv.id%>").innerHTML = addCommas(((latestPrice * <%= inv.quantity %>) - <%= inv.cost %>).toFixed(2));
-					document.getElementById("gain%<%=inv.id%>").innerHTML = (100*(((latestPrice * <%= inv.quantity %>) - <%= inv.cost %>) / <%= inv.cost %>)).toFixed(3);
+
 					total();
 				}
 			});
@@ -81,28 +78,30 @@
 				}
 				return '$' + x1 + x2; //returns delimited number and includes a $ in front.
 			}
+
 		</script>
 		<script>console.log(<%= inv.id %>)</script> <!-- console.log for testing purposes only -->
 	<% end %>
+</div>
 
-	<script> //script to calculate total of different attributes of User's investments
-		var totMarketValue = 0 //initial value of current investment Market values
-		var totDayGain = 0 //initial value of current investment day gains
+<script> //script to calculate total of different attributes of User's investments
+	var totMarketValue = 0 //initial value of current investment Market values
+	var totDayGain = 0 //initial value of current investment day gains
 
-		//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
-		//the these investment attribues as data is loaded.
-		function total(){ 
-			document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
-			document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
-			var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
-			document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
-			var totGain = totMarketValue - <%= total %>
-			document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
-			var totGainPercent = 100 * ( totGain / <%= total %>)
-			document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
-		};
-	</script>
-
+	//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
+	//the these investment attribues as data is loaded.
+	function total(){ 
+		document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
+		document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
+		var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
+		document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
+		var totGain = totMarketValue - <%= total %>
+		document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
+		var totGainPercent = 100 * ( totGain / <%= total %>)
+		document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
+	};
+</script>
+<table>
 	<% if @investments.length != 0 %> <!-- if user has more than 1 investment row is generated. it displays the total values of all investments. data is from script above -->
 		<tr>
 			<td>Total</td>
@@ -119,3 +118,4 @@
 		</tr>
 	<% end %>
 </table>
+<% end %>

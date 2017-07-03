@@ -29,6 +29,7 @@ class InvestmentsController < ApplicationController
   # POST /investments.json
   def create
     @investment = current_user.investments.new(investment_params)
+    byebug
     if @investment.save
       @investments = Investment.where(user_id: current_user.id)
       respond_to do |format|
