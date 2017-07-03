@@ -2,58 +2,64 @@
 	<h3 class="text-center">Welcome <%= current_user.full_name %></h3>
 
 
-	<h2>Add New Investment!</h2>
+	<a id='addinvestment'><h3>Add New Investment</h3></a>
 
-	<%= form_for :investment, url: investments_path, remote: true do |form| %> <!-- Create New Investment Form, AJAX Functionality -->
+	<div id="addinvestmentform" style="display: none;">
+		<%= form_for :investment, url: investments_path, remote: true do |form| %> <!-- Create New Investment Form, AJAX Functionality -->
 
-		<div class="field"> <!-- Stock Symbol Input -->
-			<%= form.label :symbol %>
-			<%= form.text_field :symbol, id: :investment_symbol %>
-		</div>
+			<div class="field"> <!-- Stock Symbol Input -->
+				<%= form.label :symbol %>
+				<%= form.text_field :symbol, id: :investment_symbol %>
+			</div>
 
-		<div class="field"> <!-- Quanity Integer -->
-			<%= form.label :quantity %>
-			<%= form.number_field :quantity, id: :investment_quantity %>
-		</div>
+			<div class="field"> <!-- Quanity Integer -->
+				<%= form.label :quantity %>
+				<%= form.number_field :quantity, id: :investment_quantity %>
+			</div>
 
-		<div class="field"> <!-- Cost Float -->
-			<%= form.label :cost %>
-			<%= form.text_field :cost, id: :investment_cost %>
-		</div>
+			<div class="field"> <!-- Cost Float -->
+				<%= form.label :cost %>
+				<%= form.text_field :cost, id: :investment_cost %>
+			</div>
 
-		<div class="field"> <!-- Purchase DateTime -->
-			<!-- Future Dates and Saturday/Sundays Disabled -->
-			<label>Purchase Date</label>
-			<input type="text" id="datepicker" name="investment[purchasedate]">
+			<div class="field"> <!-- Purchase DateTime -->
+				<!-- Future Dates and Saturday/Sundays Disabled -->
+				<label>Purchase Date</label>
+				<input type="text" id="datepicker" name="investment[purchasedate]">
 
-		</div>
+			</div>
 
-		<div class="actions"> <!-- Submit Create Investment / AJAX -->
-			<%= form.submit %>
-		</div>
+			<div class="actions"> <!-- Submit Create Investment / AJAX -->
+				<%= form.submit %>
+			</div>
 
-	<% end %>
+		<% end %>
+		<br>
+	</div>
 
+	<a id='searchinvestment'><h3>Search Investments</h3></a>
 
-	<%= form_tag users_index_path, :method => 'get', remote: true do %> <!-- Current Investments Search Function with AJAX -->
-		<label>Symbol</label>	<!-- Search with Labels. Selector allow only investment Symbols that the User created -->
-		<select name="symbol">
-			<option></option>
-			<% @symbols.each do |x| %> <!-- Loops Symbols. @symbol is a list of distinct symbols -->
-				<option value="<%= x %>"><%= x %></option> <!-- x is the symbols from @symbol array -->
-			<% end %>
-		</select>
+	<div id="searchinvestmentform" style="display: none;">
+		<%= form_tag users_index_path, :method => 'get', remote: true do %> <!-- Current Investments Search Function with AJAX -->
+			<label>Symbol</label>	<!-- Search with Labels. Selector allow only investment Symbols that the User created -->
+			<select name="symbol">
+				<option></option>
+				<% @symbols.each do |x| %> <!-- Loops Symbols. @symbol is a list of distinct symbols -->
+					<option value="<%= x %>"><%= x %></option> <!-- x is the symbols from @symbol array -->
+				<% end %>
+			</select>
 
-		<label>Cost Min</label> <!-- Search with cost. Search returns Cost greater or equal than value -->
-		<input type="number_with_delimiter" name="cost_min"></input>
+			<label>Cost Min</label> <!-- Search with cost. Search returns Cost greater or equal than value -->
+			<input type="number_with_delimiter" name="cost_min"></input>
 
-		<label>Cost Max</label> <!-- Search with cost. Search returns Cost less or equal than value -->
-		<input type="number_with_delimiter" name="cost_max"></input>
+			<label>Cost Max</label> <!-- Search with cost. Search returns Cost less or equal than value -->
+			<input type="number_with_delimiter" name="cost_max"></input>
 
-		<div class="actions"> <!-- Submit Search Investment / AJAX -->
-			<%= submit_tag "Search", :name => nil %>
-		</div>
-	<% end %>
+			<div class="actions"> <!-- Submit Search Investment / AJAX -->
+				<%= submit_tag "Search", :name => nil %>
+			</div>
+		<% end %>
+	</div>
 
 	<div>
 		<%= render "investment" %> <!-- render partial _investment.html.erb when opening page, search AJAX, and create AJAX -->

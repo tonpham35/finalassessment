@@ -18,6 +18,7 @@ class InvestmentsController < ApplicationController
 
       if @investment.save
         @investments = Investment.where(user_id: current_user.id)
+        @symbols = Investment.where(user: current_user.id).distinct.pluck(:symbol)
         respond_to do |format|
           format.html { redirect_to users_index_path, notice: 'Investment was successfully created.' }
           format.js

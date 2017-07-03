@@ -22,3 +22,13 @@ $( function() {
 		maxDate: new Date
 	});
 } );
+
+$(document).ready(function(){
+    $("#addinvestment").click(function(){
+        $("#addinvestmentform").toggle();
+    });
+
+    $("#searchinvestment").click(function(){
+        $("#searchinvestmentform").toggle();
+    });
+});

@@ -71,8 +71,8 @@
 				  	var value = (<%= inv.quantity %> * latestPrice);
 
 					document.getElementById("symbol<%=inv.id%>").innerHTML = symbol;
-					document.getElementById("cost<%=inv.id%>").innerHTML = addCommas2(value);
-					document.getElementById("value<%=inv.id%>").innerHTML = addCommas2(cost)
+					document.getElementById("cost<%=inv.id%>").innerHTML = addCommas2(cost);
+					document.getElementById("value<%=inv.id%>").innerHTML = addCommas2(value)
 					document.getElementById("last<%=inv.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
 					document.getElementById("dayGain$<%=inv.id%>").innerHTML = addCommas(( latestPrice - openPrice ).toFixed(2));
 					document.getElementById("dayGain%<%=inv.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
@@ -118,7 +118,7 @@
 		//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
 		//the these investment attribues as data is loaded.
 		function total(){ 
-			document.getElementById("totalMarketValue").innerHTML = addCommas(totMarketValue.toFixed(2));
+			document.getElementById("totalMarketValue").innerHTML = addCommas2(totMarketValue);
 			document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
 			var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
 			document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
