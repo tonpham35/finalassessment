@@ -26,7 +26,7 @@ class UsersController < ApplicationController
 	def index
 		if signed_in?
 			@investments = Investment.where(user: current_user.id).search(params[:symbol],params[:cost_min],params[:cost_max],current_user)
-			@symbols = @investments.distinct.pluck(:symbol)
+			@symbols = Investment.where(user: current_user.id).distinct.pluck(:symbol)
 			respond_to do |format|
 		     	format.html
 		     	format.js
