@@ -1,7 +1,7 @@
 
-<% if @investments.count > 0 %>
-<div id='myInvestments'><!-- User Investments Table Show different Attributes -->
 
+<div id='myInvestments'><!-- User Investments Table Show different Attributes -->
+<% if @investments.count > 0 %>
 	<% total = 0 %> <!-- initial value of total investment total cost -->
 	<% @investments.each do |x| %> <!-- loop all investments to sums up total investment cost -->
 		<% total += x.cost %>
@@ -129,5 +129,6 @@
 			document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
 		};
 	</script>
-</div>
 <% end %>
+</div>
+
