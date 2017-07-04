@@ -11,6 +11,7 @@ class SessionsController < ApplicationController
 	    	redirect_to users_index_path
 		else
 			@message = 'Invalid Log-in. Check email and password'
+      redirect_to root_path
 		end
 	end
 
