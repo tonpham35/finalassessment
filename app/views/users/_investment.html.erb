@@ -37,11 +37,6 @@
 				            </div>	
 				            <%= link_to inv, method: :delete, data: { confirm: 'Are you sure?' } do %> <span style="font-size: 10px"> Delete <%= inv.symbol %></span> <% end %>
 				        </div>
-				        
-				        <!-- Card media image -->
-				        <div class="media-right">
-				        	<canvas id="pie-chart<%=inv.id%>" height="100px" width="100px"></canvas>
-				        </div>
 					</div>
 				</div>
 			<script>
@@ -83,7 +78,6 @@
 					document.getElementById("dayGain%<%=inv.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
 
 					total();
-					chartjs();
 				}
 			});
 
@@ -133,27 +127,6 @@
 			console.log(<%= inv.id %>) //console.log for testing purposes only
 			</script>
 		<% end %> <!-- end of card loop -->
-		<script>
-			function chartjs() {
-				<% @investments.each do |x| %>
-					new Chart(document.getElementById("pie-chart<%=x.id%>"), {
-					    type: 'pie',
-					    data: {
-					      labels: [<%=x.id%>, "other investments"],
-					      datasets: [{
-					        backgroundColor: ["#3e95cd","#c45850"],
-					        data: [valueprice<%=x.id%>,(totMarketValue - valueprice<%=x.id%>)]
-					      }]	
-					    },
-					    options: {
-					      legend: {
-					        display: false
-					      }
-					    }
-					});
-				<% end %>
-			}
-		</script>
 	</div>
 <% end %>
 </div>

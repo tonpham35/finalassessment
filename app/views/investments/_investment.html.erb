@@ -20,7 +20,7 @@
 	<div class ="row" style="margin:10px 2px 4px 10px;">
 		<% @investments.each do |inv| %> <!-- start of card loop -->
 				<!--Investment Cards -->
-				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-bottom: 10px;">
 				    <div class="card">
 				    	<!-- Card media heading -->
 				        <div class="media-body">
@@ -35,7 +35,7 @@
 				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Day Gain ($):</b> <span id='dayGain$<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
 				            	<div class="col-xs-6" style="margin-top: 2px;"><b>Day Gain (%):</b> <span id='dayGain%<%=inv.id%>'><img src="/assets/kloader.gif" id='loader'></span></div>
 				            </div>	
-				            <%= link_to inv, method: :delete, data: { confirm: 'Are you sure?' } do %> <span style="font-size: 10px"> Delete <%= inv.symbol %></span> <% end %><span style="font-size: 5px"> Created with AJAX</span>
+				            <%= link_to inv, method: :delete, data: { confirm: 'Are you sure?' } do %> <span style="font-size: 10px"> Delete <%= inv.symbol %> AJAX</span> <% end %>
 				        </div>
 					</div>
 				</div>
@@ -68,11 +68,11 @@
 
 				  	totMarketValue += (<%= inv.quantity %> * latestPrice);
 				  	totDayGain += (( latestPrice - openPrice ) * <%= inv.quantity %>);
-				  	var value = (<%= inv.quantity %> * latestPrice);
+				  	valueprice<%=inv.id%> = (<%= inv.quantity %> * latestPrice);
 
 					document.getElementById("symbol<%=inv.id%>").innerHTML = symbol;
 					document.getElementById("cost<%=inv.id%>").innerHTML = addCommas2(cost);
-					document.getElementById("value<%=inv.id%>").innerHTML = addCommas2(value)
+					document.getElementById("value<%=inv.id%>").innerHTML = addCommas2(valueprice<%=inv.id%>)
 					document.getElementById("last<%=inv.id%>").innerHTML = addCommas((latestPrice * 1).toFixed(2));
 					document.getElementById("dayGain$<%=inv.id%>").innerHTML = addCommas(( latestPrice - openPrice ).toFixed(2));
 					document.getElementById("dayGain%<%=inv.id%>").innerHTML = (100 * (( latestPrice - openPrice ) / openPrice)).toFixed(3);
@@ -90,9 +90,9 @@
 				var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
 				while (rgx.test(x1)) {	//loops the rex and adds a comma in between pairs are 3
 					x1 = x1.replace(rgx, '$1' + ',' + '$2');
-				}
+				};
 				return '$' + x1 + x2; //returns delimited number and includes a $ in front.
-			}
+			};
 			
 			//function to add commas to number, removes decimal points
 			function addCommas2(nStr) {
@@ -103,32 +103,31 @@
 				var rgx = /(\d+)(\d{3})/; //regex to split out the last pairs are 3 from the rear of the number
 				while (rgx.test(x1)) {	//loops the rex and adds a comma in between pairs are 3
 					x1 = x1.replace(rgx, '$1' + ',' + '$2');
-				}
+				};
 				return '$' + x1; //returns delimited number and includes a $ in front.
-			}
+			}''
 
+			//script to calculate total of different attributes of User's investments
+			var totMarketValue = 0 //initial value of current investment Market values
+			var totDayGain = 0 //initial value of current investment day gains
+
+			//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
+			//the these investment attribues as data is loaded.
+			function total(){ 
+				document.getElementById("totalMarketValue").innerHTML = addCommas2(totMarketValue);
+				document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
+				var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
+				document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
+				var totGain = totMarketValue - <%= total %>
+				document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
+				var totGainPercent = 100 * ( totGain / <%= total %>)
+				document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
+			};
+
+			console.log(<%= inv.id %>) //console.log for testing purposes only
 			</script>
-			<script>console.log(<%= inv.id %>)</script> <!-- console.log for testing purposes only -->
-
 		<% end %> <!-- end of card loop -->
 	</div>
-	<script> //script to calculate total of different attributes of User's investments
-		var totMarketValue = 0 //initial value of current investment Market values
-		var totDayGain = 0 //initial value of current investment day gains
-
-		//function total() is a callback. it is called everytime a single JSON API is parsed. It will sum and display 
-		//the these investment attribues as data is loaded.
-		function total(){ 
-			document.getElementById("totalMarketValue").innerHTML = addCommas2(totMarketValue);
-			document.getElementById("totalDayGain$").innerHTML = addCommas(totDayGain.toFixed(2));
-			var totDayGainPercent = 100 * ( totDayGain / totMarketValue );
-			document.getElementById("totalDayGain%").innerHTML = totDayGainPercent.toFixed(3);
-			var totGain = totMarketValue - <%= total %>
-			document.getElementById("totalGain$").innerHTML = addCommas(totGain.toFixed(2));
-			var totGainPercent = 100 * ( totGain / <%= total %>)
-			document.getElementById("totalGain%").innerHTML = totGainPercent.toFixed(3);
-		};
-	</script>
 <% end %>
 </div>
 
